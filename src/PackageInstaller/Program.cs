@@ -234,31 +234,33 @@ namespace HedgehogDevelopment.PackageInstaller
 			SitecoreConnectorAsmx = sitecoreDeployFolder + Properties.Settings.Default.SitecoreConnectorFolder + @"\" +
 			                        serviceFile.Name;
 
-			CopyIfChanged(serviceLibrary, new FileInfo(SitecoreConnectorDll));
-			CopyIfChanged(serviceFile, new FileInfo(SitecoreConnectorAsmx));
+			bool updated = CopyIfChanged(serviceLibrary, new FileInfo(SitecoreConnectorDll));
+			updated |= CopyIfChanged(serviceFile, new FileInfo(SitecoreConnectorAsmx));
 
-			Debug("Sitecore connector deployed successfully.");
-
+			Debug(updated ? "Sitecore connector deployed successfully." : "Sitecore connector already deployed.");
 			return true;
 		}
 
-		private static void CopyIfChanged(FileInfo source, FileInfo target)
+		private static bool CopyIfChanged(FileInfo source, FileInfo target)
 		{
 			if (!source.Exists)
-				return;
+				return false;
 
 			if (!target.Exists)
 			{
 				File.Copy(source.FullName, target.FullName);
 				File.SetAttributes(target.FullName, FileAttributes.Normal);
-				return;
+				return true;
 			}
 
 			if (source.Length != target.Length || source.LastWriteTime > target.LastWriteTime)
 			{
 				File.Copy(source.FullName, target.FullName);
 				File.SetAttributes(target.FullName, FileAttributes.Normal);
+				return true;
 			}
+
+			return false;
 		}
 
 		/// <summary>
