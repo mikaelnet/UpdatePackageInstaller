@@ -255,7 +255,7 @@ namespace HedgehogDevelopment.PackageInstaller
 
 			if (source.Length != target.Length || source.LastWriteTime > target.LastWriteTime)
 			{
-				File.Copy(source.FullName, target.FullName);
+				File.Copy(source.FullName, target.FullName, true);
 				File.SetAttributes(target.FullName, FileAttributes.Normal);
 				return true;
 			}
