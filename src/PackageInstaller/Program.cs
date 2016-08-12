@@ -27,6 +27,7 @@ namespace HedgehogDevelopment.PackageInstaller
 			string sitecoreDeployFolder = null;
 			bool showHelp = args.Length == 0;
 			bool removePackageInstaller = false;
+		    int timeout = 10*60*1000;
 
 			// Options declaration
 			OptionSet options = new OptionSet()
@@ -55,7 +56,16 @@ namespace HedgehogDevelopment.PackageInstaller
 				{
 					"c|cleanup", "Remove package installer when done",
 					v => removePackageInstaller = v != null
-				}
+				},
+			    {
+			        "t|timeout", "Package installer timeout (in seconds)",
+			        v =>
+			        {
+			            int t;
+			            if (int.TryParse(v, out t))
+			                timeout = t * 1000;
+			        }
+			    }
 			};
 
 			#endregion
@@ -129,7 +139,7 @@ namespace HedgehogDevelopment.PackageInstaller
 					{
 						service.Url = string.Concat(sitecoreWebUrl, Properties.Settings.Default.SitecoreConnectorFolder,
 							"/TdsPackageInstaller.asmx");
-						service.Timeout = 10 * 60 * 1000;
+						service.Timeout = timeout;
 
 						Debug("Initializing package installation ..");
 
