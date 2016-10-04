@@ -58,9 +58,8 @@ namespace HedgehogDevelopment.PackageInstaller
 					v => removePackageInstaller = v != null
 				},
 			    {
-			        "t|timeout", "Package installer timeout (in seconds)",
-			        v =>
-			        {
+			        "t|timeout=", "Package installer timeout (in seconds)",
+			        v => {
 			            int t;
 			            if (int.TryParse(v, out t))
 			                timeout = t * 1000;
@@ -142,6 +141,7 @@ namespace HedgehogDevelopment.PackageInstaller
 						service.Timeout = timeout;
 
 						Debug("Initializing package installation ..");
+						Debug("   Service URL {0}, timeout {1}s", service.Url, service.Timeout/1000);
 
 						service.InstallPackage(packagePath);
 
@@ -215,7 +215,7 @@ namespace HedgehogDevelopment.PackageInstaller
 		/// <returns></returns>
 		private static bool DeploySitecoreConnector(string sitecoreDeployFolder)
 		{
-			Debug("Initializing Sitecore connector ...");
+			Debug("Initializing Sitecore connector at {0}...", sitecoreDeployFolder);
 
 			string sourceFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			FileInfo serviceLibrary = new FileInfo(sourceFolder + @"\HedgehogDevelopment.TDS.PackageInstallerService.dll");
